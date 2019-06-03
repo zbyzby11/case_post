@@ -4,7 +4,7 @@
 import torch as t
 import numpy as np
 import json
-
+import os
 class Net2vec(object):
     def __init__(self):
         ...
