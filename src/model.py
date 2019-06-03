@@ -1,6 +1,8 @@
 """
 LINE模型的定义，主要重写nn.Module下的forward方法和实现保存模型参数的方法
 """
+import json
+
 import torch as t
 import numpy as np
 
@@ -58,10 +60,27 @@ class LINE(nn.Module):
         return all_score
 
 
-    def save_para(self,filename):
+    def save_para(self,file_dir):
         """
         保存模型的参数，主要是caseid的embedding矩阵和entityid的embedding矩阵
         :param filename: 保存的文件路径
-        :return: None
+        :return: 两个文件，每个文件为字典格式，一个是保存案件id embedding的文件字典，
+                一个是保存entityid embedding的文件字典
         """
-        ...
+        case_emb = self.case_emb.weight.data.detach().cpu().numpy().tolist()
+        entity_emb = self.entity_emb.weight.data.detach().cpu().tolist()
+
+        #案件id的embedding矩阵
+        case_f = open(file_dir + 'case_emb.txt','w',encoding='utf8')
+        case_f.write(json.dumps(case_emb,ensure_ascii=False))
+        case_f.close()
+
+        #实体id的embedding矩阵
+        entity_f = open(file_dir + 'entity_emb.txt','w',encoding='utf8')
+        entity_f.write(json.dumps(entity_emb,ensure_ascii=False))
+        entity_f.close()
+
+        #todo:对于新的案件，需要先找出与其关联的实体的embedding，并求平均，
+        # 用平均值来表示这个案件的embedding，所以需要对每个训练的案件都进行这个操作
+        # 需要保存一个文件，保存每个案件的平均embedding向量
+
