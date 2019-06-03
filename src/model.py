@@ -28,6 +28,10 @@ class LINE(nn.Module):
         self.init_weight()
 
     def init_weight(self):
+        """
+        模型参数的初始化
+        :return: None
+        """
         nn.init.xavier_uniform(self.case_emb.weight.data)
         nn.init.xavier_uniform(self.entity_emb.weight.data)
 
